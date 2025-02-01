@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { PDFDownloadLink, pdf } from "@react-pdf/renderer";
+import { PDFDownloadLink, pdf, PDFViewer } from "@react-pdf/renderer";
 
 import { RoomPermission } from "./Documents/RoomPermission";
 import { Letter } from "./Documents/Letter";
@@ -15,8 +15,11 @@ const App = () => {
 
   useEffect(() => {
     const generatePdfBlob = async () => {
-      const DocumentComponent = documentType === "RoomPermission" ? RoomPermission : Letter;
-      const blob = await pdf(<DocumentComponent formData={formData} />).toBlob();
+      const DocumentComponent =
+        documentType === "RoomPermission" ? RoomPermission : Letter;
+      const blob = await pdf(
+        <DocumentComponent formData={formData} />
+      ).toBlob();
       const url = URL.createObjectURL(blob);
       setPdfUrl(url);
     };
@@ -35,7 +38,10 @@ const App = () => {
         style={{ marginLeft: "20px", marginRight: "20px" }}
       >
         <div className="mb-4">
-          <label htmlFor="documentType" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="documentType"
+            className="block text-sm font-medium text-gray-700"
+          >
             Select Document Type:
           </label>
           <select
@@ -54,10 +60,24 @@ const App = () => {
         ) : (
           <LetterForm onFormDataChange={setFormData} />
         )}
-
+        <div className="mt-6">
+          <PDFViewer width={600} height={400} style={{ border: "none" }}>
+            {documentType === "RoomPermission" ? (
+              <RoomPermission formData={formData} />
+            ) : (
+              <Letter formData={formData} />
+            )}
+          </PDFViewer>
+        </div>
         <div className="mt-4 text-center">
           <PDFDownloadLink
-            document={documentType === "RoomPermission" ? <RoomPermission formData={formData} /> : <Letter formData={formData} />}
+            document={
+              documentType === "RoomPermission" ? (
+                <RoomPermission formData={formData} />
+              ) : (
+                <Letter formData={formData} />
+              )
+            }
             fileName={`${documentType}.pdf`}
           >
             {
