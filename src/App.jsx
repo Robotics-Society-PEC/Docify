@@ -8,9 +8,19 @@ import { LetterForm } from "./Forms/LetterForm";
 
 import "./App.css";
 
+const Footer = () => (
+  <footer className="bg-gray-800 text-white text-center py-4 mt-8 w-full">
+    <p>
+      Made by{" "}
+      <a href="https://github.com/Witty-Wizard" className="text-blue-400">
+        Shashank Agarwal{" "}
+      </a>
+      ❤️
+    </p>
+  </footer>
+);
 const App = () => {
   const [formData, setFormData] = useState({});
-  const [pdfUrl, setPdfUrl] = useState("");
   const [documentType, setDocumentType] = useState("RoomPermission");
 
   useEffect(() => {
@@ -32,63 +42,75 @@ const App = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div
-        className="bg-white w-full bg-opacity-50 p-8 rounded-lg shadow-lg border-2 border-black"
-        style={{ marginLeft: "20px", marginRight: "20px" }}
-      >
-        <div className="mb-4">
-          <label
-            htmlFor="documentType"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Select Document Type:
-          </label>
-          <select
-            id="documentType"
-            value={documentType}
-            onChange={handleDocumentTypeChange}
-            className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-          >
-            <option value="RoomPermission">Room Permission</option>
-            <option value="Letter">Application Letter</option>
-          </select>
-        </div>
+    <>
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <div
+          className="bg-white w-full bg-opacity-50 p-8 rounded-lg shadow-lg border-2 border-black flex"
+          style={{ marginLeft: "20px", marginRight: "20px" }}
+        >
+          <div className="w-1/2 pr-4">
+            <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+              <div className="sm:col-span-4">
+                <label
+                  htmlFor="documentType"
+                  className="block text-sm font-medium text-gray-900"
+                >
+                  Select Document Type:
+                </label>
+                <div className="mt-2">
+                  <select
+                    id="documentType"
+                    value={documentType}
+                    onChange={handleDocumentTypeChange}
+                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2"
+                  >
+                    <option value="">Select...</option>
+                    <option value="RoomPermission">Room Permission</option>
+                    <option value="Letter">Application Letter</option>
+                  </select>
+                </div>
+              </div>
+            </div>
 
-        {documentType === "RoomPermission" ? (
-          <RoomPermissionForm onFormDataChange={setFormData} />
-        ) : (
-          <LetterForm onFormDataChange={setFormData} />
-        )}
-        <div className="mt-6">
-          <PDFViewer width={600} height={400} style={{ border: "none" }}>
             {documentType === "RoomPermission" ? (
-              <RoomPermission formData={formData} />
+              <RoomPermissionForm onFormDataChange={setFormData} />
             ) : (
-              <Letter formData={formData} />
+              <LetterForm onFormDataChange={setFormData} />
             )}
-          </PDFViewer>
-        </div>
-        <div className="mt-4 text-center">
-          <PDFDownloadLink
-            document={
-              documentType === "RoomPermission" ? (
-                <RoomPermission formData={formData} />
-              ) : (
-                <Letter formData={formData} />
-              )
-            }
-            fileName={`${documentType}.pdf`}
-          >
-            {
-              <button className="p-2 bg-blue-500 text-white rounded">
-                Download PDF
-              </button>
-            }
-          </PDFDownloadLink>
+          </div>
+          <div className="w-1/2 pl-4 flex flex-col">
+            <div className="flex-grow">
+              <PDFViewer width="100%" height="100%" style={{ border: "none" }}>
+                {documentType === "RoomPermission" ? (
+                  <RoomPermission formData={formData} />
+                ) : (
+                  <Letter formData={formData} />
+                )}
+              </PDFViewer>
+            </div>
+            <div className="mt-4 text-center">
+              <PDFDownloadLink
+                document={
+                  documentType === "RoomPermission" ? (
+                    <RoomPermission formData={formData} />
+                  ) : (
+                    <Letter formData={formData} />
+                  )
+                }
+                fileName={`${documentType}.pdf`}
+              >
+                {
+                  <button className="p-2 bg-blue-500 text-white rounded">
+                    Download PDF
+                  </button>
+                }
+              </PDFDownloadLink>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+      <Footer></Footer>
+    </>
   );
 };
 
