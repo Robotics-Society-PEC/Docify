@@ -19,9 +19,22 @@ const Footer = () => (
     </p>
   </footer>
 );
+
 const App = () => {
   const [formData, setFormData] = useState({});
   const [documentType, setDocumentType] = useState("RoomPermission");
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize(); // Check on initial load
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     const generatePdfBlob = async () => {
@@ -45,10 +58,10 @@ const App = () => {
     <>
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
         <div
-          className="bg-white w-full bg-opacity-50 p-8 rounded-lg shadow-lg border-2 border-black flex"
+          className="bg-white w-full bg-opacity-50 p-8 rounded-lg shadow-lg border-2 border-black flex flex-col md:flex-row"
           style={{ marginLeft: "20px", marginRight: "20px" }}
         >
-          <div className="w-1/2 pr-4">
+          <div className="w-full md:w-1/2 pr-4">
             <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
               <div className="sm:col-span-4">
                 <label
@@ -78,16 +91,22 @@ const App = () => {
               <LetterForm onFormDataChange={setFormData} />
             )}
           </div>
-          <div className="w-1/2 pl-4 flex flex-col">
-            <div className="flex-grow">
-              <PDFViewer width="100%" height="100%" style={{ border: "none" }}>
-                {documentType === "RoomPermission" ? (
-                  <RoomPermission formData={formData} />
-                ) : (
-                  <Letter formData={formData} />
-                )}
-              </PDFViewer>
-            </div>
+          <div className="w-full md:w-1/2 pl-4 flex flex-col">
+            {!isMobile && (
+              <div className="flex-grow">
+                <PDFViewer
+                  width="100%"
+                  height="100%"
+                  style={{ border: "none" }}
+                >
+                  {documentType === "RoomPermission" ? (
+                    <RoomPermission formData={formData} />
+                  ) : (
+                    <Letter formData={formData} />
+                  )}
+                </PDFViewer>
+              </div>
+            )}
             <div className="mt-4 text-center">
               <PDFDownloadLink
                 document={
@@ -99,17 +118,15 @@ const App = () => {
                 }
                 fileName={`${documentType}.pdf`}
               >
-                {
-                  <button className="p-2 bg-blue-500 text-white rounded">
-                    Download PDF
-                  </button>
-                }
+                <button className="p-2 bg-blue-500 text-white rounded">
+                  Download PDF
+                </button>
               </PDFDownloadLink>
             </div>
           </div>
         </div>
       </div>
-      <Footer></Footer>
+      <Footer />
     </>
   );
 };
