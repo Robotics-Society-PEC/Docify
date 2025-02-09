@@ -2,8 +2,17 @@ import { Page, Text, View, Document, StyleSheet } from "@react-pdf/renderer";
 
 export const RoomPermission = ({ formData }) => {
   const formatDate = (date) => {
+    if (!date) return "N/A";
     const options = { day: "2-digit", month: "2-digit", year: "numeric" };
     return new Date(date).toLocaleDateString("en-GB", options);
+  };
+
+  const formatTime = (time) => {
+    if (!time) return "N/A";
+    const [hours, minutes] = time.split(":");
+    const period = hours >= 12 ? "PM" : "AM";
+    const formattedHours = hours % 12 || 12;
+    return `${formattedHours}:${minutes} ${period}`;
   };
 
   const styles = StyleSheet.create({
@@ -99,78 +108,56 @@ export const RoomPermission = ({ formData }) => {
 
         <View style={styles.section}>
           <View style={styles.table}>
-            <View style={styles.tableRow}>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCellMain}>Name of Society:</Text>
+            {[
+              { label: "Name of Society", value: formData.society },
+              { label: "Event Name", value: formData.eventName },
+              {
+                label: "Date",
+                value: `${formatDate(formData.fromDate)} - ${formatDate(
+                  formData.toDate
+                )}`,
+              },
+              {
+                label: "Time",
+                value: `${formatTime(formData.fromTime)} - ${formatTime(
+                  formData.toTime
+                )}`,
+              },
+              { label: "Room Number", value: formData.roomNumber },
+              { label: "Department", value: formData.department },
+              {
+                label: "Brief Event Description",
+                value: formData.eventDescription,
+              },
+            ].map((row, index, array) => (
+              <View
+                style={[
+                  styles.tableRow,
+                  index === array.length - 1 && styles.lastRow,
+                ]}
+                key={row.label}
+              >
+                <View
+                  style={[
+                    styles.tableCol,
+                    index === array.length - 1 && styles.lastRow,
+                  ]}
+                >
+                  <Text style={styles.tableCellMain}>{row.label}:</Text>
+                </View>
+                <View
+                  style={[
+                    styles.tableCol,
+                    styles.lastCol,
+                    index === array.length - 1 && styles.lastRow,
+                  ]}
+                >
+                  <Text style={styles.tableCell}>{row.value}</Text>
+                </View>
               </View>
-              <View style={[styles.tableCol, styles.lastCol]}>
-                <Text style={styles.tableCell}>{formData.society}</Text>
-              </View>
-            </View>
-
-            <View style={styles.tableRow}>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCellMain}>Event Name:</Text>
-              </View>
-              <View style={[styles.tableCol, styles.lastCol]}>
-                <Text style={styles.tableCell}>{formData.eventName}</Text>
-              </View>
-            </View>
-
-            <View style={styles.tableRow}>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCellMain}>Date:</Text>
-              </View>
-              <View style={[styles.tableCol, styles.lastCol]}>
-                <Text style={styles.tableCell}>
-                  {formatDate(formData.fromDate)} -{" "}
-                  {formatDate(formData.toDate)}
-                </Text>
-              </View>
-            </View>
-
-            <View style={styles.tableRow}>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCellMain}>Time:</Text>
-              </View>
-              <View style={[styles.tableCol, styles.lastCol]}>
-                <Text style={styles.tableCell}>{formData.time}</Text>
-              </View>
-            </View>
-
-            <View style={styles.tableRow}>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCellMain}>Room Number:</Text>
-              </View>
-              <View style={[styles.tableCol, styles.lastCol]}>
-                <Text style={styles.tableCell}>{formData.roomNumber}</Text>
-              </View>
-            </View>
-
-            <View style={styles.tableRow}>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCellMain}>Department:</Text>
-              </View>
-              <View style={[styles.tableCol, styles.lastCol]}>
-                <Text style={styles.tableCell}>{formData.department}</Text>
-              </View>
-            </View>
-
-            <View style={[styles.tableRow, styles.lastRow]}>
-              <View style={[styles.tableCol, styles.lastRow]}>
-                <Text style={styles.tableCellMain}>
-                  Brief Event Description:
-                </Text>
-              </View>
-              <View style={[styles.tableCol, styles.lastCol, styles.lastRow]}>
-                <Text style={styles.tableCell}>
-                  {formData.eventDescription}
-                </Text>
-              </View>
-            </View>
+            ))}
           </View>
 
-          {/* Note Section */}
           <View style={styles.note}>
             <Text>
               Note: The undersigned takes full responsibility for any damage to
