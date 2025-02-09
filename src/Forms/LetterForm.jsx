@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { summarizeText } from "../utils/summarize";
 
 export const LetterForm = ({ onFormDataChange }) => {
   const [formData, setFormData] = useState({
@@ -20,9 +21,20 @@ export const LetterForm = ({ onFormDataChange }) => {
     const { name, value } = e.target;
     const updatedData = { ...formData, [name]: value };
     setFormData(updatedData);
-
-    // Notify parent updated data
     onFormDataChange(updatedData);
+  };
+
+  const handleSummarize = async () => {
+    const inputText = `
+      Receiver: ${formData.receiver}
+      Message: ${formData.message}
+    `;
+    try {
+      const summary = await summarizeText(inputText);
+      handleChange({ target: { name: "subject", value: summary } });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -40,7 +52,7 @@ export const LetterForm = ({ onFormDataChange }) => {
           className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6"
         >
           <div className="sm:col-span-4">
-            <label className="block text-sm/6 font-medium text-gray-900">
+            <label className="block text-sm font-medium text-gray-900">
               {field.label}
             </label>
             <div className="mt-2">
@@ -69,7 +81,7 @@ export const LetterForm = ({ onFormDataChange }) => {
       ))}
       <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
         <div className="sm:col-span-3">
-          <label className="block text-sm/6 font-medium text-gray-900">
+          <label className="block text-sm font-medium text-gray-900">
             Signatory
           </label>
           <div className="mt-2">
@@ -84,7 +96,7 @@ export const LetterForm = ({ onFormDataChange }) => {
           </div>
         </div>
         <div className="sm:col-span-3">
-          <label className="block text-sm/6 font-medium text-gray-900">
+          <label className="block text-sm font-medium text-gray-900">
             Signatory
           </label>
           <div className="mt-2">
@@ -102,7 +114,7 @@ export const LetterForm = ({ onFormDataChange }) => {
 
       <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
         <div className="sm:col-span-3">
-          <label className="block text-sm/6 font-medium text-gray-900">
+          <label className="block text-sm font-medium text-gray-900">
             Signatory
           </label>
           <div className="mt-2">
@@ -117,7 +129,7 @@ export const LetterForm = ({ onFormDataChange }) => {
           </div>
         </div>
         <div className="sm:col-span-3">
-          <label className="block text-sm/6 font-medium text-gray-900">
+          <label className="block text-sm font-medium text-gray-900">
             Signatory
           </label>
           <div className="mt-2">
@@ -132,6 +144,9 @@ export const LetterForm = ({ onFormDataChange }) => {
           </div>
         </div>
       </div>
+      <button type="button" onClick={handleSummarize} className="p-2 bg-blue-500 text-white rounded">
+        Generate Subject
+      </button>
     </form>
   );
 };

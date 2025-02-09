@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { summarizeText } from "../utils/summarize";
 
 export const RoomPermissionForm = ({ onFormDataChange }) => {
   const [formData, setFormData] = useState({
@@ -18,6 +19,23 @@ export const RoomPermissionForm = ({ onFormDataChange }) => {
     const updatedData = { ...formData, [name]: value };
     setFormData(updatedData);
     onFormDataChange(updatedData);
+  };
+
+  const handleSummarize = async () => {
+    const inputText = `
+      Society: ${formData.society}
+      Event Name: ${formData.eventName}
+      Date: ${formData.fromDate} to ${formData.toDate}
+      Time: ${formData.time}
+      Room Number: ${formData.roomNumber}
+      Department: ${formData.department}
+    `;
+    try {
+      const summary = await summarizeText(inputText);
+      handleChange({ target: { name: "eventDescription", value: summary } });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -70,6 +88,9 @@ export const RoomPermissionForm = ({ onFormDataChange }) => {
           </div>
         </div>
       ))}
+      <button type="button" onClick={handleSummarize} className="p-2 bg-blue-500 text-white rounded">
+        Generate Event Description
+      </button>
     </form>
   );
 };
