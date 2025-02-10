@@ -23,12 +23,13 @@ export const RoomPermissionForm = ({ onFormDataChange }) => {
 
   const handleSummarize = async () => {
     const inputText = `
-      Society: ${formData.society}
-      Event Name: ${formData.eventName}
-      Date: ${formData.fromDate} to ${formData.toDate}
-      Time: ${formData.time}
+      Society: ${formData.society} of Punjab Engineering College
+      Event Name : ${formData.eventName}
+      on Date: ${formData.fromDate} to ${formData.toDate}
+      Timings of the event will be from : ${formData.fromTime} to ${formData.toTime}
       Room Number: ${formData.roomNumber}
       Department: ${formData.department}
+      for the interested students of the college.
     `;
     try {
       const summary = await summarizeText(inputText);
