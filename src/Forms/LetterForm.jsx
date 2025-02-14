@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { summarizeText } from "../utils/summarize";
 
-export const LetterForm = ({ onFormDataChange }) => {
+const LetterForm = ({ onFormDataChange }) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -144,9 +144,15 @@ export const LetterForm = ({ onFormDataChange }) => {
           </div>
         </div>
       </div>
-      <button type="button" onClick={handleSummarize} className="p-2 bg-blue-500 text-white rounded">
+      {/* <button
+        type="button"
+        onClick={handleSummarize}
+        className="p-2 bg-blue-500 text-white rounded"
+      >
         Generate Subject
-      </button>
+      </button> */}
     </form>
   );
 };
+
+export default LetterForm;

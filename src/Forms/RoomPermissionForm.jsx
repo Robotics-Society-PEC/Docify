@@ -58,10 +58,10 @@ export const RoomPermissionForm = ({ onFormDataChange }) => {
       ].map((field) => (
         <div
           key={field.name}
-          className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6"
+          className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 "
         >
           <div className="sm:col-span-4">
-            <label className="block text-sm font-medium text-gray-900">
+            <label className="block text-sm font-medium text-gray-900 ">
               {field.label}
             </label>
             <div className="mt-2">
@@ -89,9 +89,13 @@ export const RoomPermissionForm = ({ onFormDataChange }) => {
           </div>
         </div>
       ))}
-      <button type="button" onClick={handleSummarize} className="p-2 bg-blue-500 text-white rounded">
+      {/* <button
+        type="button"
+        onClick={handleSummarize}
+        className="p-2 bg-blue-500 text-white rounded"
+      >
         Generate Event Description
-      </button>
+      </button> */}
     </form>
   );
 };

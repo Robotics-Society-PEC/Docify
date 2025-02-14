@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { PDFDownloadLink, pdf, PDFViewer } from "@react-pdf/renderer";
+import { PDFDownloadLink, pdf } from "@react-pdf/renderer";
 
 import { RoomPermission } from "./Documents/RoomPermission";
 import { Letter } from "./Documents/Letter";
 import { RoomPermissionForm } from "./Forms/RoomPermissionForm";
-import { LetterForm } from "./Forms/LetterForm";
+import LetterForm from "./Forms/LetterForm";
+import PaperViewer from "./PaperViewer";
 
 import "./App.css";
 
@@ -24,6 +25,7 @@ const App = () => {
   const [formData, setFormData] = useState({});
   const [documentType, setDocumentType] = useState("RoomPermission");
   const [isMobile, setIsMobile] = useState(false);
+  const [pdfUrl, setPdfUrl] = useState(null); // State for generated PDF URL
 
   useEffect(() => {
     const handleResize = () => {
@@ -56,14 +58,11 @@ const App = () => {
 
   return (
     <>
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <div
-          className="bg-white w-full bg-opacity-50 p-8 rounded-lg shadow-lg border-2 border-black flex flex-col md:flex-row"
-          style={{ marginLeft: "20px", marginRight: "20px" }}
-        >
-          <div className="w-full md:w-1/2 pr-4">
-            <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-              <div className="sm:col-span-4">
+      <div className="flex flex-col items-center justify-center bg-gray-100 min-h-screen">
+        <div className="items-center justify-center bg-white bg-opacity-50 p-8 rounded-lg shadow-lg border-2 border-black flex flex-col md:flex-row w-full my-6 max-w-[95%] ">
+          <div className="w-full md:w-1/2 flex flex-col items-center">
+            <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 w-full max-w-md mx-auto">
+              <div className="sm:col-span-10">
                 <label
                   htmlFor="documentType"
                   className="block text-sm font-medium text-gray-900"
@@ -82,31 +81,24 @@ const App = () => {
                     <option value="Letter">Application Letter</option>
                   </select>
                 </div>
+                <div className="w-full">
+                {documentType === "RoomPermission" ? (
+                  <RoomPermissionForm onFormDataChange={setFormData} />
+                ) : (
+                  <LetterForm onFormDataChange={setFormData} />
+                )}
+                </div>
               </div>
             </div>
-
-            {documentType === "RoomPermission" ? (
-              <RoomPermissionForm onFormDataChange={setFormData} />
-            ) : (
-              <LetterForm onFormDataChange={setFormData} />
-            )}
           </div>
-          <div className="w-full md:w-1/2 pl-4 flex flex-col">
-            {!isMobile && (
+
+          <div className="w-full md:w-1/2 pl-4 flex flex-col ">
+            {!isMobile && pdfUrl && (
               <div className="flex-grow">
-                <PDFViewer
-                  width="100%"
-                  height="100%"
-                  style={{ border: "none" }}
-                >
-                  {documentType === "RoomPermission" ? (
-                    <RoomPermission formData={formData} />
-                  ) : (
-                    <Letter formData={formData} />
-                  )}
-                </PDFViewer>
+                <PaperViewer url={pdfUrl} />
               </div>
             )}
+
             <div className="mt-4 text-center">
               <PDFDownloadLink
                 document={
@@ -125,8 +117,9 @@ const App = () => {
             </div>
           </div>
         </div>
+
+        <Footer />
       </div>
-      <Footer />
     </>
   );
 };
