@@ -144,13 +144,13 @@ const LetterForm = ({ onFormDataChange }) => {
           </div>
         </div>
       </div>
-      {/* <button
+      <button
         type="button"
         onClick={handleSummarize}
         className="p-2 bg-blue-500 text-white rounded"
       >
         Generate Subject
-      </button> */}
+      </button>
     </form>
   );
 };

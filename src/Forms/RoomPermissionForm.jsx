@@ -23,7 +23,7 @@ export const RoomPermissionForm = ({ onFormDataChange }) => {
 
   const handleSummarize = async () => {
     const inputText = `
-      Society: ${formData.society} of Punjab Engineering College
+      Society: ${formData.society}
       Event Name : ${formData.eventName}
       on Date: ${formData.fromDate} to ${formData.toDate}
       Timings of the event will be from : ${formData.fromTime} to ${formData.toTime}
@@ -31,6 +31,7 @@ export const RoomPermissionForm = ({ onFormDataChange }) => {
       Department: ${formData.department}
       for the interested students of the college.
     `;
+
     try {
       const summary = await summarizeText(inputText);
       handleChange({ target: { name: "eventDescription", value: summary } });
@@ -89,13 +90,13 @@ export const RoomPermissionForm = ({ onFormDataChange }) => {
           </div>
         </div>
       ))}
-      {/* <button
+      <button
         type="button"
         onClick={handleSummarize}
         className="p-2 bg-blue-500 text-white rounded"
       >
         Generate Event Description
-      </button> */}
+      </button>
     </form>
   );
 };
