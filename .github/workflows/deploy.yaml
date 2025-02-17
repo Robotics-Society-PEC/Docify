@@ -21,14 +21,11 @@ jobs:
       - name: Build Next.js project
         run: yarn build
 
-      - name: Export static files
-        run: yarn export
-
       - name: Upload static site as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: nextjs-artifact
-          path: out
+          name: artifact
+          path: dist
 
   deploy:
     runs-on: ubuntu-latest
@@ -37,8 +34,8 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: nextjs-artifact
-          path: out
+          name: artifact
+          path: dist
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
