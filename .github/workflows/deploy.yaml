@@ -41,7 +41,7 @@ jobs:
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./out # The folder containing your static files
+          publish_dir: ./dist # The folder containing your static files
           publish_branch: gh-pages # Deploy to the gh-pages branch
           force_orphan: true # Create an orphan branch if it doesn't exist
           keep_files: true
