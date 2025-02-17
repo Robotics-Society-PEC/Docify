@@ -26,6 +26,7 @@ const App = () => {
   const [documentType, setDocumentType] = useState("RoomPermission");
   const [isMobile, setIsMobile] = useState(false);
   const [pdfUrl, setPdfUrl] = useState(null); // State for generated PDF URL
+  const [debounceTimer, setDebounceTimer] = useState(null);
 
   useEffect(() => {
     const handleResize = () => {
@@ -38,18 +39,32 @@ const App = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // Debounce PDF rendering to avoid excessive re-renders
   useEffect(() => {
-    const generatePdfBlob = async () => {
-      const DocumentComponent =
-        documentType === "RoomPermission" ? RoomPermission : Letter;
-      const blob = await pdf(
-        <DocumentComponent formData={formData} />
-      ).toBlob();
-      const url = URL.createObjectURL(blob);
-      setPdfUrl(url);
-    };
+    if (debounceTimer) {
+      clearTimeout(debounceTimer);
+    }
 
-    generatePdfBlob();
+    const newTimer = setTimeout(async () => {
+      const generatePdfBlob = async () => {
+        const DocumentComponent =
+          documentType === "RoomPermission" ? RoomPermission : Letter;
+        const blob = await pdf(
+          <DocumentComponent formData={formData} />
+        ).toBlob();
+        const url = URL.createObjectURL(blob);
+        setPdfUrl(url);
+      };
+
+      generatePdfBlob();
+    }, 500); // Delay of 500ms
+
+    setDebounceTimer(newTimer);
+
+    // Cleanup timeout if the component unmounts or formData changes
+    return () => {
+      clearTimeout(newTimer);
+    };
   }, [formData, documentType]);
 
   const handleDocumentTypeChange = (event) => {
@@ -82,11 +97,11 @@ const App = () => {
                   </select>
                 </div>
                 <div className="w-full">
-                {documentType === "RoomPermission" ? (
-                  <RoomPermissionForm onFormDataChange={setFormData} />
-                ) : (
-                  <LetterForm onFormDataChange={setFormData} />
-                )}
+                  {documentType === "RoomPermission" ? (
+                    <RoomPermissionForm onFormDataChange={setFormData} />
+                  ) : (
+                    <LetterForm onFormDataChange={setFormData} />
+                  )}
                 </div>
               </div>
             </div>
